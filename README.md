@@ -1,6 +1,14 @@
 # React-Webkit-Template
 
-## Babel Set Up
+## React Frontend Setup Using Webkit
+
+Create a frontend folder and run the following:
+
+```bash
+cd frontend
+```
+
+### Babel Set Up
 
 Use npm to install the necessary react babel packages
 
@@ -18,7 +26,7 @@ Create .babelrc and add the following code:
 }
 ```
 
-## Webkit Setup
+### Webkit Setup
 
 Use npm to install the necessary webpack packages
 
@@ -117,7 +125,44 @@ In package.json add the following scripts:
 }
 ```
 
-## Linter & Prettier Setup
+## NodeJS Backend Setup Using Express
+
+### Express Setup
+
+In the root folder use npm to install the necessary express packages
+
+```bash
+npm init -y
+npm install express --save
+npm install url --save
+```
+
+Create an app.js file and add the following code:
+
+```javascript
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const filename = fileURLToPath(import.meta?.url);
+const dirname = path?.dirname(filename);
+
+const app = express();
+
+app?.use(express?.static(path?.join(dirname, 'frontend/dist')));
+
+app?.get('*', (req, res) => {
+    res?.sendFile(path?.join(dirname, 'frontend/dist/index.html'));
+});
+
+const port = process?.env?.PORT || 8080;
+
+app?.listen(port, () => {
+    console.log('Listening on port ', port);
+});
+```
+
+### Linter & Prettier Setup
 
 Use npm to install the necessary eslint, prettier, and precise=commits packages
 
@@ -146,51 +191,72 @@ Create .prettierignore and add the following:
 README.md
 
 # Node modules and packages
-node_modules
+node_modules/
 package-lock.json
 
 # HTML files
 *.html
 ```
 
-Create .eslintrc.js and add the following code:
+Create an .eslintrc file and add the following code:
 
-```javascript
-module.exports = {
-    extends: ['airbnb', 'prettier', 'plugin:node/recommended'],
-    plugins: ['prettier'],
-    parser: '@babel/eslint-parser',
-    parserOptions: {
-        ecmaVersion: 2016,
-        sourceType: 'module',
-        ecmaFeatures: {
-            jsx: true,
-        },
+```json
+{
+    "extends": ["airbnb", "prettier", "plugin:react/recommended"],
+    "plugins": ["prettier"],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaVersion": 2016,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
-    env: {
-        es6: true,
-        browser: true,
-        node: true,
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
     },
-    rules: {
-        'prettier/prettier': 'error',
-        'no-unused-vars': 'warn',
-        'no-console': 'off',
-        'func-names': 'off',
-        'no-process-exit': 'off',
-        'object-shorthand': 'off',
-        'class-methods-use-this': 'off',
-        'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-        'react/function-component-definition': [
+    "rules": {
+        "prettier/prettier": "error",
+        "no-unused-vars": "warn",
+        "no-console": "off",
+        "func-names": "off",
+        "no-process-exit": "off",
+        "object-shorthand": "off",
+        "class-methods-use-this": "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/function-component-definition": [
             2,
             {
-                namedComponents: 'arrow-function',
-                unnamedComponents: 'arrow-function',
-            },
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
         ],
-        'react/propTypes': 0,
-    },
-};
+        "react/propTypes": 0
+    }
+}
+```
+
+Create a babel.config.json file and add the following:
+
+```json
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "modules": "auto",
+                "targets": {
+                    "node": "current",
+                    "browsers": ["defaults"]
+                },
+                "useBuiltIns": "entry"
+            }
+        ],
+        "@babel/react"
+    ]
+}
 ```
 
 In package.json add the following scripts:
@@ -208,11 +274,12 @@ Create .eslintignore and add the following:
 
 ```yml
 # Node modules
-node_modules
+node_modules/
 
 # Artifacts
-public
-build
+public/
+build/
+dist/
 
 # Env files
 *.env
