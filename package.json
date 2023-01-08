@@ -1,6 +1,6 @@
 {
     "name": "react-webkit-express-server-template",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "react app template using webkit hosted on an express server",
     "type": "module",
     "main": "app.js",
